@@ -1,6 +1,8 @@
 # Jira TODO
 Create issue for TODO comments
 
+Requires [Jira Login Action](https://github.com/marketplace/actions/jira-login)
+
 ## Usage
 
 Create Jira issue from TODO comments in pushed code.
