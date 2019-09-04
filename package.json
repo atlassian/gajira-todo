@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=testing jest __tests__"
+    "test": "NODE_ENV=testing jest __tests__",
+    "build": "ncc build index.js --minify",
+    "watch": "ncc build index.js --watch --minify"
   },
   "author": "",
   "license": "ISC",
