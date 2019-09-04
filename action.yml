@@ -15,4 +15,4 @@ outputs:
     description: Well-formed JSON array containing keys of all newly created issues
 runs:
   using: 'node12'
-  main: './index.js'
+  main: './dist/index.js'
