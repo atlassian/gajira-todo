@@ -1,6 +1,6 @@
 const fs = require('fs')
 const YAML = require('yaml')
-const yargs = require('yargs')
+const core = require('@actions/core')
 
 const cliConfigPath = `${process.env.HOME}/.jira.d/config.yml`
 const configPath = `${process.env.HOME}/jira/config.yml`
@@ -23,6 +23,9 @@ async function exec () {
     if (result) {
       console.log(`Created issues: ${result.issues}`)
 
+      // Produce a well-formed JSON array of all newly created issue keys
+      core.setOutput("issues", JSON.stringify(result.issues, null, 4))
+
       return
     }
 
@@ -34,34 +37,11 @@ async function exec () {
 }
 
 function parseArgs () {
-  yargs
-    .option('project', {
-      alias: 'p',
-      describe: 'Provide project to create issue in',
-      demandOption: !config.project,
-      default: config.project,
-      type: 'string',
-    })
-    .option('issuetype', {
-      alias: 't',
-      describe: 'Provide type of the issue to be created',
-      demandOption: !config.issuetype,
-      default: config.issuetype,
-      type: 'string',
-    })
-    .option('description', {
-      alias: 'd',
-      describe: 'Provide issue description',
-      default: config.description,
-      type: 'string',
-    })
-
-  yargs
-    .parserConfiguration({
-      'parse-numbers': false,
-    })
-
-  return yargs.argv
+  return {
+    project: core.getInput('project'),
+    issuetype: core.getInput('issuetype'),
+    description: core.getInput('description')
+  }
 }
 
 exec()
