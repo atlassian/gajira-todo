@@ -1,5 +1,8 @@
 name: Jira issue from TODO
 description: Create Jira issue for TODO comments
+branding:
+  icon: 'check-square'
+  color: 'blue'
 inputs:
   project:
     description: Key of the project
