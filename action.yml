@@ -1,4 +1,4 @@
-name: Jira TODO
+name: Jira issue from TODO
 description: Create Jira issue for TODO comments
 inputs:
   project:
