@@ -1,5 +1,9 @@
 on:
-  push
+  push:
+      branches:
+      - dev-jira
+      
+  
 
 name: My Workflow
 
