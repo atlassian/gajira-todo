@@ -21,7 +21,7 @@ jobs:
     - name: Create TODO
       uses: ./
       with:
-        project: MC
+        project: CEEDEVOPS-PILOT
         issuetype: Task
         description: Created automatically via GitHub Actions
       env:
