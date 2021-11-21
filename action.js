@@ -34,7 +34,9 @@ module.exports = class {
     // console.log('conditions: ', githubEvent.commits, githubEvent.commits.length > 0)
     console.log('gh event: ', githubEvent)
 
-    if (githubEvent.commits && githubEvent.commits.length > 0) {
+    // githubEvent.pull_request.diff_url
+
+    if (Number(githubEvent.pull_request.commits) > 0) {
       tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
     }
 
