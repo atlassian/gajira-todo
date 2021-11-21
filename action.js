@@ -41,7 +41,7 @@ module.exports = class {
 
     if (Number(githubEvent.pull_request.commits) > 0) {
       // tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
-      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{id: 'eed4192ffc6136dad5531f16c47c02c60eb195e8'}]))
+      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{id: githubEvent.pull_request_head.sha}]))
     }
 
     if (tasks.length === 0) {
@@ -134,7 +134,7 @@ module.exports = class {
   async findTodoInCommits (repo, commits) {
     return Promise.all(commits.map(async (c) => {
       const res = await this.GitHub.getCommitDiff(repo.full_name, c.id)
-      const rx = /^\.*(?:\/\/|#)\s+TODO:(.*)$/gm
+      const rx = /^\+.*(?:\/\/|#)\s+TODO:(.*)$/gm
 
       console.log('diff: ', res)
 
