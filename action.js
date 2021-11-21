@@ -5,6 +5,7 @@ const GitHub = require('./common/net/GitHub')
 
 module.exports = class {
   constructor ({ githubEvent, argv, config, githubToken }) {
+    console.log('task ID: ', config.taskId)
     this.Jira = new Jira({
       baseUrl: config.baseUrl,
       token: config.token,
@@ -26,6 +27,7 @@ module.exports = class {
     const projectKey = argv.project
     const issuetypeName = argv.issuetype
     let tasks = []
+
 
     if (githubEvent.commits && githubEvent.commits.length > 0) {
       tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))

@@ -22,6 +22,9 @@ inputs:
   token:
     description: "Token of Optimax services bot account"
     required: true
+  taskId:
+    description: "Original Jira task ID"
+    required: true
 outputs:
   issues:
     description: Well-formed JSON array containing keys of all newly created issues
