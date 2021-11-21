@@ -41,7 +41,7 @@ module.exports = class {
 
     if (Number(githubEvent.pull_request.commits) > 0) {
       // tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
-      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{id: githubEvent.pull_request_head.sha}]))
+      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{id: githubEvent.pull_request.head.sha}]))
     }
 
     if (tasks.length === 0) {
