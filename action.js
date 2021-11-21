@@ -36,8 +36,12 @@ module.exports = class {
 
     // githubEvent.pull_request.diff_url
 
+    const diff = await fetch('https://github.com/optimaxdev/GlassesUSA-Desktop/pull/5931.diff')
+    console.log('PR diff: ', diff)
+
     if (Number(githubEvent.pull_request.commits) > 0) {
-      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
+      // tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
+      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{id: ''}]))
     }
 
     if (tasks.length === 0) {

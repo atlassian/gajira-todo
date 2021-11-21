@@ -1,4 +1,5 @@
 const { get } = require('lodash')
+const fetch = require('node-fetch')
 
 const serviceName = 'github'
 const { format } = require('url')
@@ -11,13 +12,17 @@ class GitHub {
   }
 
   async getCommitDiff (repo, commitId) {
-    return this.fetch('getCommitDiff', 
-      { pathname: `/repos/${repo}/commits/${commitId}`}, 
+    return this.fetch('getCommitDiff',
+      { pathname: `/repos/${repo}/commits/${commitId}`},
       {
         headers: {
           Accept: 'application/vnd.github.v3.diff',
         }
       })
+  }
+
+  async getPRDiff (url) {
+    return fetch()
   }
 
   async fetch (apiMethodName,
