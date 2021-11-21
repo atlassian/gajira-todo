@@ -5,7 +5,6 @@ const GitHub = require('./common/net/GitHub')
 
 module.exports = class {
   constructor ({ githubEvent, argv, config, githubToken }) {
-    console.log('task ID: ', config, config.issue)
     this.Jira = new Jira({
       baseUrl: config.baseUrl,
       token: config.token,
@@ -28,10 +27,9 @@ module.exports = class {
     const issuetypeName = argv.issuetype
     let tasks = []
 
-    const tmp = await this.Jira.getIssue(config.issue)
-    const tmp2 = await this.Jira.getIssue('GUSA-10997')
+    const jiraIssue = await this.Jira.getIssue(config.issue)
 
-    console.log(tmp, tmp2)
+    console.log(jiraIssue)
 
 
     if (githubEvent.commits && githubEvent.commits.length > 0) {
@@ -79,6 +77,15 @@ module.exports = class {
       }, {
         key: 'summary',
         value: summary,
+      }, {
+        key: 'assignee',
+        value: jiraIssue.fields.assignee.displayName,
+      }, {
+        key: 'customfield_12601', //  team
+        value: jiraIssue.fields.customfield_12601.value,
+      }, {
+        key: 'labels',
+        value: ['ESlint'],
       }]
 
       if (!argv.description) {
@@ -103,8 +110,7 @@ module.exports = class {
       })
 
 
-
-      // return (await this.Jira.createIssue(payload)).key
+      return (await this.Jira.createIssue(payload)).key
     })
 
     return { issues: await Promise.all(issues) }
