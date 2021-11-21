@@ -16,9 +16,6 @@ const config = YAML.parse(fs.readFileSync(configPath, 'utf8'))
 
 async function exec () {
   try {
-    console.log(github.context)
-    // console.log(octokit)
-
     const result = await new Action({
       githubEvent,
       argv: parseArgs(),
