@@ -5,7 +5,7 @@ const GitHub = require('./common/net/GitHub')
 
 module.exports = class {
   constructor ({ githubEvent, argv, config, githubToken }) {
-    console.log('task ID: ', config)
+    console.log('task ID: ', config, config.issue)
     this.Jira = new Jira({
       baseUrl: config.baseUrl,
       token: config.token,
