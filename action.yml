@@ -13,6 +13,15 @@ inputs:
   description:
     description: Issue description
     required: false
+  baseUrl:
+    description: "Base URL for JIRA"
+    required: true
+  email:
+    description: "Email of Optimax services bot account"
+    required: true
+  token:
+    description: "Token of Optimax services bot account"
+    required: true
 outputs:
   issues:
     description: Well-formed JSON array containing keys of all newly created issues

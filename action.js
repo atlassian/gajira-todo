@@ -95,7 +95,9 @@ module.exports = class {
         fields: {},
       })
 
-      return (await this.Jira.createIssue(payload)).key
+
+
+      // return (await this.Jira.createIssue(payload)).key
     })
 
     return { issues: await Promise.all(issues) }
