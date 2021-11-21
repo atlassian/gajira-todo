@@ -86,16 +86,18 @@ module.exports = class {
       }, {
         key: 'summary',
         value: summary,
-      }, {
-        key: 'assignee',
-        value: jiraIssue.fields.assignee.displayName,
-      }, {
-        key: 'customfield_12601', //  team
-        value: jiraIssue.fields.customfield_12601.value,
-      }, {
-        key: 'labels',
-        value: ['ESlint'],
-      }]
+      }
+      // , {
+      //   key: 'assignee',
+      //   value: jiraIssue.fields.assignee.displayName,
+      // }, {
+      //   key: 'customfield_12601', //  team
+      //   value: jiraIssue.fields.customfield_12601.value,
+      // }, {
+      //   key: 'labels',
+      //   value: ['ESlint'],
+      // }
+      ]
 
       if (!argv.description) {
         argv.description = `Created with GitHub commit ${commitUrl}`
