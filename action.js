@@ -128,6 +128,8 @@ module.exports = class {
       const res = await this.GitHub.getCommitDiff(repo.full_name, c.id)
       const rx = /^\.*(?:\/\/|#)\s+TODO:(.*)$/gm
 
+      console.log('diff: ', res)
+
       return getMatches(res, rx, 1)
         .map(_.trim)
         .filter(Boolean)
