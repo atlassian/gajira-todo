@@ -35,13 +35,13 @@ module.exports = class {
     console.log('gh event: ', githubEvent)
 
     // githubEvent.pull_request.diff_url
-
-    const diff = await fetch('https://github.com/optimaxdev/GlassesUSA-Desktop/pull/5931.diff')
-    console.log('PR diff: ', diff)
+    //
+    // const diff = await fetch('https://github.com/optimaxdev/GlassesUSA-Desktop/pull/5931.diff')
+    // console.log('PR diff: ', diff)
 
     if (Number(githubEvent.pull_request.commits) > 0) {
       // tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
-      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{id: ''}]))
+      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{id: 'eed4192ffc6136dad5531f16c47c02c60eb195e8'}]))
     }
 
     if (tasks.length === 0) {
