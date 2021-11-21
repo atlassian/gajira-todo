@@ -31,7 +31,8 @@ module.exports = class {
 
     console.log(jiraIssue)
 
-    console.log('conditions: ', githubEvent.commits, githubEvent.commits.length > 0)
+    // console.log('conditions: ', githubEvent.commits, githubEvent.commits.length > 0)
+    console.log('gh event: ', githubEvent)
 
     if (githubEvent.commits && githubEvent.commits.length > 0) {
       tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
