@@ -23,10 +23,15 @@ module.exports = class {
   }
 
   async execute () {
-    const { argv, githubEvent } = this
+    const { argv, githubEvent, config } = this
     const projectKey = argv.project
     const issuetypeName = argv.issuetype
     let tasks = []
+
+    const tmp = await this.Jira.getIssue(config.issue)
+    const tmp2 = await this.Jira.getIssue('GUSA-10997')
+
+    console.log(tmp, tmp2)
 
 
     if (githubEvent.commits && githubEvent.commits.length > 0) {
