@@ -29,6 +29,8 @@ module.exports = class {
 
     const jiraIssue = await this.Jira.getIssue(config.issue)
 
+    const platform = githubEvent.pull_request.html_url.indexOf('Desktop') !== -1 ? 'D' : 'M'
+
     console.log('Jira team: ', jiraIssue.fields.customfield_12601.value)
     console.log('Jira team string: ', jiraIssue.fields.customfield_12601.value)
 
@@ -86,7 +88,7 @@ module.exports = class {
         },
       }, {
         key: 'summary',
-        value: `Refactor in order to remove eslint disable: ${content}`,
+        value: `${platform} - Refactor in order to remove eslint disable: ${content}`,
       },
       {
         key: 'assignee',
