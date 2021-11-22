@@ -10,9 +10,6 @@ inputs:
   issuetype:
     description: "Type of the issue to be created. Example: 'Incident'"
     required: true
-  description:
-    description: Issue description
-    required: false
   baseUrl:
     description: "Base URL for JIRA"
     required: true

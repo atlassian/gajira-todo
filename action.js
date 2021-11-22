@@ -43,9 +43,7 @@ module.exports = class {
     // console.log('PR diff: ', diff)
 
     if (Number(githubEvent.pull_request.commits) > 0) {
-      // tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
-      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{ id: githubEvent.pull_request.head.sha }], githubEvent.pull_request.number))
-      console.log(tasks)
+      tasks = await this.findTodoInCommits(githubEvent.repository, githubEvent.pull_request.number)
     }
 
     if (tasks.length === 0) {
@@ -75,7 +73,7 @@ module.exports = class {
       return
     }
 
-    const issues = tasks.map(async ({ summary, commitUrl }) => {
+    const issues = tasks.map(async ({ content, route }) => {
       let providedFields = [{
         key: 'project',
         value: {
@@ -88,28 +86,22 @@ module.exports = class {
         },
       }, {
         key: 'summary',
-        value: summary,
+        value: `Refactor in order to remove eslint disable: ${content}`,
       },
       {
         key: 'assignee',
         value: { accountId: jiraIssue.fields.assignee.accountId },
       }, {
-        key: 'customfield_12601', //  team
+        key: 'customfield_12601', //  team field
         value: { value: jiraIssue.fields.customfield_12601.value },
       }, {
         key: 'labels',
         value: ['ESlint'],
+      }, {
+        key: 'description',
+        value: `Can be found in the following file: ${route}`,
       },
       ]
-
-      if (!argv.description) {
-        argv.description = `Created with GitHub commit ${commitUrl}`
-      }
-
-      providedFields.push({
-        key: 'description',
-        value: argv.description,
-      })
 
       if (argv.fields) {
         providedFields = [...providedFields, ...this.transformFields(argv.fields)]
@@ -138,52 +130,76 @@ module.exports = class {
     }))
   }
 
-  async findTodoInCommits (repo, commits, prID) {
-    return Promise.all(commits.map(async (c) => {
-      const res = await this.GitHub.getCommitDiff(repo.full_name, c.id)
-      const prDiff = await this.GitHub.getPRDiff(repo.full_name, prID)
-      const rx = /^\+.*(?:\/\/|#)\s+TODO:(.*)$/gm
-      const routeRegex = /^\+\+\+.b\/.*$/gm
+  async findTodoInPr (repo, prId) {
+    const prDiff = await this.GitHub.getPRDiff(repo.full_name, prId)
+    const rx = /^\+.*(?:\/\/|#)\s+TODO:(.*)$/gm
+    const routeRegex = /^\+\+\+.b\/.*$/gm
 
-      console.log('prDiff: ', typeof prDiff, prDiff)
+    const matches = getMatches(prDiff, rx, 1)
 
-      const matches = getMatches(prDiff, rx, 1)
+    if (!matches.length) return
 
-      if (!matches.length) return
-
-      matches.map((match) => {
+    return matches
+      .map(_.trim)
+      .filter(Boolean)
+      .map((match) => {
         const end = prDiff.indexOf(match)
 
         const routeMatches = prDiff.slice(0, end).match(routeRegex)
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
 
-        return { content: match, route: lastRouteMatch }
-
-        // const lastRoute = prDiff.slice().lastIndexOf()
+        return { content: match, route: lastRouteMatch.slice(5) }
       })
-
-      // console.log('diff: ', res)
-
-      console.log('formatted matches: ', matches.map((match) => {
-        const end = prDiff.indexOf(match)
-
-        const routeMatches = prDiff.slice(0, end).match(routeRegex)
-        const lastRouteMatch = routeMatches[routeMatches.length - 1]
-
-        return { content: match, route: lastRouteMatch }
-
-        // const lastRoute = prDiff.slice().lastIndexOf()
-      }))
-
-      return matches
-        .map(_.trim)
-        .filter(Boolean)
-        .map(s => ({
-          commitUrl: 'asd',
-          summary: s,
-        }))
-    }))
   }
+
+//   async findTodoInCommits (repo, prID) {
+//     return Promise.all(commits.map(async (c) => {
+//       // const res = await this.GitHub.getCommitDiff(repo.full_name, c.id)
+//       const prDiff = await this.GitHub.getPRDiff(repo.full_name, prID)
+//       const rx = /^\+.*(?:\/\/|#)\s+TODO:(.*)$/gm
+//       const routeRegex = /^\+\+\+.b\/.*$/gm
+//
+//       const matches = getMatches(prDiff, rx, 1)
+//
+//       if (!matches.length) return
+//
+//       // matches.map((match) => {
+//       //   const end = prDiff.indexOf(match)
+//       //
+//       //   const routeMatches = prDiff.slice(0, end).match(routeRegex)
+//       //   const lastRouteMatch = routeMatches[routeMatches.length - 1]
+//       //
+//       //   return { content: match, route: lastRouteMatch.slice(5) }
+//       //
+//       //   // const lastRoute = prDiff.slice().lastIndexOf()
+//       // })
+//
+//       // console.log('diff: ', res)
+//
+//       // console.log('formatted matches: ', matches.map((match) => {
+//       //   const end = prDiff.indexOf(match)
+//       //
+//       //   const routeMatches = prDiff.slice(0, end).match(routeRegex)
+//       //   const lastRouteMatch = routeMatches[routeMatches.length - 1]
+//       //
+//       //   return { content: match, route: lastRouteMatch }
+//       //
+//       //   // const lastRoute = prDiff.slice().lastIndexOf()
+//       // }))
+//
+//       return matches
+//         .map(_.trim)
+//         .filter(Boolean)
+//         .map((match) => {
+//           const end = prDiff.indexOf(match)
+//
+//           const routeMatches = prDiff.slice(0, end).match(routeRegex)
+//           const lastRouteMatch = routeMatches[routeMatches.length - 1]
+//
+//           return { content: match, route: lastRouteMatch.slice(5) }
+//         })
+//     }))
+//   }
 }
 
 function getMatches (string, regex, index) {
