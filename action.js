@@ -147,9 +147,17 @@ module.exports = class {
 
       console.log('prDiff: ', typeof prDiff, prDiff)
 
+      const matches = getMatches(prDiff, rx, 1)
+
+      matches.map((match) => {
+        // const end = prDiff.indexOf(match)
+
+        // const lastRoute = prDiff.slice().lastIndexOf()
+      })
+
       // console.log('diff: ', res)
 
-      return getMatches(prDiff, rx, 1)
+      return matches
         .map(_.trim)
         .filter(Boolean)
         .map(s => ({
