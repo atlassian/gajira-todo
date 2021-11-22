@@ -143,7 +143,7 @@ module.exports = class {
       const res = await this.GitHub.getCommitDiff(repo.full_name, c.id)
       const prDiff = await this.GitHub.getPRDiff(repo.full_name, prID)
       const rx = /^\+.*(?:\/\/|#)\s+TODO:(.*)$/gm
-      const routeRegex = /^\+\+\+.b\//gm
+      const routeRegex = /^\+\+\+.b\/.*$/gm
 
       console.log('prDiff: ', typeof prDiff, prDiff)
 
