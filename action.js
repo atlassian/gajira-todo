@@ -44,7 +44,7 @@ module.exports = class {
 
     if (Number(githubEvent.pull_request.commits) > 0) {
       // tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
-      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{ id: githubEvent.pull_request.head.sha }]))
+      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{ id: githubEvent.pull_request.head.sha }], githubEvent.pull_request.number))
       console.log(tasks)
     }
 
@@ -125,7 +125,7 @@ module.exports = class {
 
       console.log('fields: ', payload)
 
-      return (await this.Jira.createIssue(payload)).key
+      // return (await this.Jira.createIssue(payload)).key
     })
 
     return { issues: await Promise.all(issues) }
@@ -138,10 +138,14 @@ module.exports = class {
     }))
   }
 
-  async findTodoInCommits (repo, commits) {
+  async findTodoInCommits (repo, commits, prID) {
     return Promise.all(commits.map(async (c) => {
       const res = await this.GitHub.getCommitDiff(repo.full_name, c.id)
+      const prDiff = await this.GitHub.getPRDiff(repo.full_name, prID)
       const rx = /^\+.*(?:\/\/|#)\s+TODO:(.*)$/gm
+      const routeRegex = /^\+\+\+.b\//gm
+
+      console.log(prDiff)
 
       console.log('diff: ', res)
 

@@ -6,23 +6,29 @@ const { format } = require('url')
 const client = require('./client')(serviceName)
 
 class GitHub {
-  constructor ({token }) {
+  constructor ({ token }) {
     this.baseUrl = 'https://api.github.com'
     this.token = token
   }
 
   async getCommitDiff (repo, commitId) {
     return this.fetch('getCommitDiff',
-      { pathname: `/repos/${repo}/commits/${commitId}`},
+      { pathname: `/repos/${repo}/commits/${commitId}` },
       {
         headers: {
           Accept: 'application/vnd.github.v3.diff',
-        }
+        },
       })
   }
 
-  async getPRDiff (url) {
-    return fetch()
+  async getPRDiff (repo, prId) {
+    return this.fetch('getCommitDiff',
+      { pathname: `/repos/${repo}/pulls/${prId}` },
+      {
+        headers: {
+          Accept: 'application/vnd.github.v3.diff',
+        },
+      })
   }
 
   async fetch (apiMethodName,
