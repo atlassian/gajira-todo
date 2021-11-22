@@ -31,25 +31,16 @@ module.exports = class {
 
     const platform = githubEvent.pull_request.html_url.indexOf('Desktop') !== -1 ? 'D' : 'M'
 
-    console.log('Jira team: ', jiraIssue.fields.customfield_12601.value)
-    console.log('Jira team string: ', jiraIssue.fields.customfield_12601.value)
-
     console.log(jiraIssue)
 
-    // console.log('conditions: ', githubEvent.commits, githubEvent.commits.length > 0)
     console.log('gh event: ', githubEvent)
 
-    // githubEvent.pull_request.diff_url
-    //
-    // const diff = await fetch('https://github.com/optimaxdev/GlassesUSA-Desktop/pull/5931.diff')
-    // console.log('PR diff: ', diff)
-
     if (Number(githubEvent.pull_request.commits) > 0) {
-      tasks = await this.findTodoInPr(githubEvent.repository, githubEvent.pull_request.number)
+      tasks = await this.findEslintInPr(githubEvent.repository, githubEvent.pull_request.number)
     }
 
     if (tasks.length === 0) {
-      console.log('no TODO found :(')
+      console.log('no eslint-disables found :)')
 
       return
     }
@@ -132,7 +123,7 @@ module.exports = class {
     }))
   }
 
-  async findTodoInPr (repo, prId) {
+  async findEslintInPr (repo, prId) {
     const prDiff = await this.GitHub.getPRDiff(repo.full_name, prId)
     const rx = /^\+.*(?:\/\/|\/\*)\s+eslint-disable(.*)$/gm
     const routeRegex = /^\+\+\+.b\/.*$/gm
