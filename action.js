@@ -132,7 +132,7 @@ module.exports = class {
 
   async findTodoInPr (repo, prId) {
     const prDiff = await this.GitHub.getPRDiff(repo.full_name, prId)
-    const rx = /^\+.*(?:\/\/|#)\s+TODO:(.*)$/gm
+    const rx = /^\+.*(?:\/\/|\/\*)\s+eslint-disable(.*)$/gm
     const routeRegex = /^\+\+\+.b\/.*$/gm
 
     const matches = getMatches(prDiff, rx, 1)
