@@ -26,11 +26,11 @@ class Jira {
 
     try {
       return this.fetch('getIssue', {
-        pathname: `/rest/api/2/issue/${issueId}`,
-        query: {
-          fields: fields.join(','),
-          expand: expand.join(','),
-        },
+        pathname: `/rest/api/3/issue/${issueId}`,
+        // query: {
+        //   fields: fields.join(','),
+        //   expand: expand.join(','),
+        // },
       })
     } catch (error) {
       if (get(error, 'res.status') === 404) {
