@@ -112,9 +112,7 @@ module.exports = class {
         fields: {},
       })
 
-      console.log('fields: ', payload)
-
-      // return (await this.Jira.createIssue(payload)).key
+      return (await this.Jira.createIssue(payload)).key
     })
 
     return { issues: await Promise.all(issues) }
