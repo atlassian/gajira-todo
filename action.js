@@ -145,11 +145,11 @@ module.exports = class {
       const rx = /^\+.*(?:\/\/|#)\s+TODO:(.*)$/gm
       const routeRegex = /^\+\+\+.b\//gm
 
-      console.log(prDiff)
+      console.log('prDiff: ', typeof prDiff, prDiff)
 
-      console.log('diff: ', res)
+      // console.log('diff: ', res)
 
-      return getMatches(res, rx, 1)
+      return getMatches(prDiff, rx, 1)
         .map(_.trim)
         .filter(Boolean)
         .map(s => ({
@@ -168,6 +168,8 @@ function getMatches (string, regex, index) {
   while (match = regex.exec(string)) {
     matches.push(match[index])
   }
+
+  console.log('matches:', matches)
 
   return matches
 }
