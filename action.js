@@ -92,7 +92,7 @@ module.exports = class {
       },
       {
         key: 'assignee',
-        value: { name: jiraIssue.fields.assignee.displayName },
+        value: { accountId: jiraIssue.fields.assignee.accountId },
       }, {
         key: 'customfield_12601', //  team
         value: { value: jiraIssue.fields.customfield_12601.value },
