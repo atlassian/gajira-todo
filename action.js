@@ -149,13 +149,22 @@ module.exports = class {
 
       const matches = getMatches(prDiff, rx, 1)
 
-      matches.map((match) => {
-        // const end = prDiff.indexOf(match)
+      if (!matches.length) return
+
+      matches.forEach((match) => {
+        const end = prDiff.indexOf(match)
+
+        const routeMatches = prDiff.slice(0, end).match(routeRegex)
+        const lastRouteMatch = routeMatches[routeMatches.length - 1]
+
+        return { content: match, route: lastRouteMatch }
 
         // const lastRoute = prDiff.slice().lastIndexOf()
       })
 
       // console.log('diff: ', res)
+
+      console.log('formatted matches: ', matches)
 
       return matches
         .map(_.trim)
