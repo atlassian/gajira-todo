@@ -43,7 +43,7 @@ module.exports = class {
     // console.log('PR diff: ', diff)
 
     if (Number(githubEvent.pull_request.commits) > 0) {
-      tasks = await this.findTodoInCommits(githubEvent.repository, githubEvent.pull_request.number)
+      tasks = await this.findTodoInPr(githubEvent.repository, githubEvent.pull_request.number)
     }
 
     if (tasks.length === 0) {
