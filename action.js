@@ -1,5 +1,4 @@
 const _ = require('lodash')
-const fetch = require('node-fetch')
 const Jira = require('./common/net/Jira')
 const GitHub = require('./common/net/GitHub')
 
@@ -92,7 +91,12 @@ module.exports = class {
         value: ['ESlint'],
       }, {
         key: 'description',
-        value: `Can be found in the following file: ${route}`,
+        value: `Can be found in the following file: ${route}
+        
+        
+        
+        Action was triggered by this PR: ${githubEvent.pull_request.html_url}
+        `,
       },
       ]
 

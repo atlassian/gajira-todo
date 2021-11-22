@@ -1,5 +1,5 @@
-name: Jira issue from TODO
-description: Create Jira issue for TODO comments
+name: Jira issue from eslint-disable comments
+description: Create Jira issue for eslint disabling comments
 branding:
   icon: 'check-square'
   color: 'blue'
