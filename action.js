@@ -151,7 +151,7 @@ module.exports = class {
 
       if (!matches.length) return
 
-      matches.forEach((match) => {
+      matches.map((match) => {
         const end = prDiff.indexOf(match)
 
         const routeMatches = prDiff.slice(0, end).match(routeRegex)
@@ -164,7 +164,16 @@ module.exports = class {
 
       // console.log('diff: ', res)
 
-      console.log('formatted matches: ', matches)
+      console.log('formatted matches: ', matches.map((match) => {
+        const end = prDiff.indexOf(match)
+
+        const routeMatches = prDiff.slice(0, end).match(routeRegex)
+        const lastRouteMatch = routeMatches[routeMatches.length - 1]
+
+        return { content: match, route: lastRouteMatch }
+
+        // const lastRoute = prDiff.slice().lastIndexOf()
+      }))
 
       return matches
         .map(_.trim)
