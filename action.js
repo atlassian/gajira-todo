@@ -125,7 +125,7 @@ module.exports = class {
 
       console.log('fields: ', payload)
 
-      // return (await this.Jira.createIssue(payload)).key
+      return (await this.Jira.createIssue(payload)).key
     })
 
     return { issues: await Promise.all(issues) }
