@@ -29,6 +29,9 @@ module.exports = class {
 
     const jiraIssue = await this.Jira.getIssue(config.issue)
 
+    console.log('Jira team: ', jiraIssue.fields.customfield_12601.value)
+    console.log('Jira team string: ', jiraIssue.fields.customfield_12601.value)
+
     console.log(jiraIssue)
 
     // console.log('conditions: ', githubEvent.commits, githubEvent.commits.length > 0)
@@ -41,7 +44,7 @@ module.exports = class {
 
     if (Number(githubEvent.pull_request.commits) > 0) {
       // tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, githubEvent.commits))
-      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{id: githubEvent.pull_request.head.sha}]))
+      tasks = _.flatten(await this.findTodoInCommits(githubEvent.repository, [{ id: githubEvent.pull_request.head.sha }]))
       console.log(tasks)
     }
 
@@ -86,17 +89,17 @@ module.exports = class {
       }, {
         key: 'summary',
         value: summary,
-      }
-      // , {
-      //   key: 'assignee',
-      //   value: jiraIssue.fields.assignee.displayName,
-      // }, {
-      //   key: 'customfield_12601', //  team
-      //   value: jiraIssue.fields.customfield_12601.value,
-      // }, {
-      //   key: 'labels',
-      //   value: ['ESlint'],
-      // }
+      },
+      {
+        key: 'assignee',
+        value: { name: jiraIssue.fields.assignee.displayName },
+      }, {
+        key: 'customfield_12601', //  team
+        value: { value: jiraIssue.fields.customfield_12601.value },
+      }, {
+        key: 'labels',
+        value: ['ESlint'],
+      },
       ]
 
       if (!argv.description) {
@@ -120,6 +123,7 @@ module.exports = class {
         fields: {},
       })
 
+      console.log('fields: ', payload)
 
       // return (await this.Jira.createIssue(payload)).key
     })
