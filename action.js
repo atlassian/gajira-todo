@@ -26,7 +26,11 @@ module.exports = class {
     const issuetypeName = argv.issuetype
     let tasks = []
 
-    if (githubEvent.pull_request.title.indexOf('automerge_release') !== -1) return
+    if (githubEvent.pull_request.title.indexOf('automerge_release') !== -1) {
+      console.log('automerge is excludeed from this action')
+
+      return
+    }
 
     const jiraIssue = config.issue ? await this.Jira.getIssue(config.issue) : null
 
