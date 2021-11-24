@@ -26,13 +26,11 @@ module.exports = class {
     const issuetypeName = argv.issuetype
     let tasks = []
 
-    const jiraIssue = await this.Jira.getIssue(config.issue)
+    if (githubEvent.pull_request.title.indexOf('automerge_release') !== -1) return
+
+    const jiraIssue = config.issue ? await this.Jira.getIssue(config.issue) : null
 
     const platform = githubEvent.pull_request.html_url.indexOf('Desktop') !== -1 ? 'D' : 'M'
-
-    console.log(jiraIssue)
-
-    console.log('gh event: ', githubEvent)
 
     if (Number(githubEvent.pull_request.commits) > 0) {
       tasks = await this.findEslintInPr(githubEvent.repository, githubEvent.pull_request.number)
@@ -82,10 +80,10 @@ module.exports = class {
       },
       {
         key: 'assignee',
-        value: { accountId: jiraIssue.fields.assignee.accountId },
+        value: { accountId: jiraIssue ? jiraIssue.fields.assignee.accountId : '5faa5f3a8405b10077a8fd7e' }, // if there's no jira task then assign to Mikhail Nikolaevskiy in Growth team (change to somebody else onc he's gone)
       }, {
         key: 'customfield_12601', //  team field
-        value: { value: jiraIssue.fields.customfield_12601.value },
+        value: { value: jiraIssue ? jiraIssue.fields.customfield_12601.value : 'Gusa Growth' },
       }, {
         key: 'labels',
         value: ['ESlint'],
@@ -112,6 +110,8 @@ module.exports = class {
         fields: {},
       })
 
+      console.log('Constructed fields: ', payload)
+
       return (await this.Jira.createIssue(payload)).key
     })
 
@@ -119,7 +119,7 @@ module.exports = class {
   }
 
   transformFields (fields) {
-    return Object.keys(fields).map(fieldKey => ({
+    return Object.keys(fields).map((fieldKey) => ({
       key: fieldKey,
       value: fields[fieldKey],
     }))
@@ -132,7 +132,7 @@ module.exports = class {
 
     const matches = getMatches(prDiff, rx, 1)
 
-    if (!matches.length) return
+    if (!matches || !matches.length) return
 
     return matches
       .map(_.trim)
@@ -146,55 +146,6 @@ module.exports = class {
         return { content: match, route: lastRouteMatch.slice(5) }
       })
   }
-
-//   async findTodoInCommits (repo, prID) {
-//     return Promise.all(commits.map(async (c) => {
-//       // const res = await this.GitHub.getCommitDiff(repo.full_name, c.id)
-//       const prDiff = await this.GitHub.getPRDiff(repo.full_name, prID)
-//       const rx = /^\+.*(?:\/\/|#)\s+TODO:(.*)$/gm
-//       const routeRegex = /^\+\+\+.b\/.*$/gm
-//
-//       const matches = getMatches(prDiff, rx, 1)
-//
-//       if (!matches.length) return
-//
-//       // matches.map((match) => {
-//       //   const end = prDiff.indexOf(match)
-//       //
-//       //   const routeMatches = prDiff.slice(0, end).match(routeRegex)
-//       //   const lastRouteMatch = routeMatches[routeMatches.length - 1]
-//       //
-//       //   return { content: match, route: lastRouteMatch.slice(5) }
-//       //
-//       //   // const lastRoute = prDiff.slice().lastIndexOf()
-//       // })
-//
-//       // console.log('diff: ', res)
-//
-//       // console.log('formatted matches: ', matches.map((match) => {
-//       //   const end = prDiff.indexOf(match)
-//       //
-//       //   const routeMatches = prDiff.slice(0, end).match(routeRegex)
-//       //   const lastRouteMatch = routeMatches[routeMatches.length - 1]
-//       //
-//       //   return { content: match, route: lastRouteMatch }
-//       //
-//       //   // const lastRoute = prDiff.slice().lastIndexOf()
-//       // }))
-//
-//       return matches
-//         .map(_.trim)
-//         .filter(Boolean)
-//         .map((match) => {
-//           const end = prDiff.indexOf(match)
-//
-//           const routeMatches = prDiff.slice(0, end).match(routeRegex)
-//           const lastRouteMatch = routeMatches[routeMatches.length - 1]
-//
-//           return { content: match, route: lastRouteMatch.slice(5) }
-//         })
-//     }))
-//   }
 }
 
 function getMatches (string, regex, index) {
