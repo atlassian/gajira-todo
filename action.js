@@ -157,7 +157,5 @@ function getMatches (string, regex, index) {
     matches.push(match[index])
   }
 
-  console.log('matches:', matches)
-
   return matches
 }
