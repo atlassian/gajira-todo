@@ -27,7 +27,7 @@ module.exports = class {
     let tasks = []
 
     if (githubEvent.pull_request.title.indexOf('automerge_release') !== -1) {
-      console.log('automerge is excludeed from this action')
+      console.log('Automerge is excluded from this action')
 
       return
     }
@@ -116,7 +116,7 @@ module.exports = class {
 
       console.log('Constructed fields: ', payload)
 
-      return (await this.Jira.createIssue(payload)).key
+      // return (await this.Jira.createIssue(payload)).key
     })
 
     return { issues: await Promise.all(issues) }
@@ -147,7 +147,9 @@ module.exports = class {
         const routeMatches = prDiff.slice(0, end).match(routeRegex)
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
 
-        return { content: match, route: lastRouteMatch.slice(5) }
+        if ((lastRouteMatch.includes('/modules/') || lastRouteMatch.includes('/server/')) && !lastRouteMatch.includes('.test.')) {
+          return { content: match, route: lastRouteMatch.slice(5) }
+        }
       })
   }
 }
