@@ -93,7 +93,7 @@ module.exports = class {
         value: ['ESlint'],
       }, {
         key: 'description',
-        value: `Can be found in the following file: ${route}
+        value: `Can be found in the following file: ${route.slice(5)}
         
         
         
@@ -141,17 +141,14 @@ module.exports = class {
 
     return matches
       .map(_.trim)
-      .filter((match) => {
+      .map((match) => {
         const end = prDiff.indexOf(match)
 
         const routeMatches = prDiff.slice(0, end).match(routeRegex)
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
-        console.log(match, lastRouteMatch)
 
-        if ((lastRouteMatch.includes('/modules/') || lastRouteMatch.includes('/server/')) && !lastRouteMatch.includes('.test.')) {
-          return { content: match, route: lastRouteMatch.slice(5) }
-        }
-      })
+        return { content: match, route: lastRouteMatch }
+      }).filter(({ content, route }) => (route.includes('/modules/') || route.includes('/server/')) && !route.includes('.test.'))
   }
 }
 
