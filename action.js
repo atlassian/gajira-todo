@@ -144,10 +144,15 @@ module.exports = class {
 
     return matches
       .map(_.trim)
+      .filter(Boolean)
       .map((match) => {
         const end = prDiff.indexOf(match)
 
+        console.log('match: ', match)
+        console.log('end: ', end)
+
         const routeMatches = prDiff.slice(0, end).match(routeRegex)
+        console.log('routeMatches:', routeMatches)
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
 
         return { content: match, route: lastRouteMatch }
