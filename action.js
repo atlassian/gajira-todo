@@ -154,13 +154,7 @@ module.exports = class {
 
         return { content: match.slice(match.indexOf('eslint-disable')), route: lastRouteMatch }
       // }).filter(({ content, route }) => (route.includes('/modules/') || route.includes('/server/')) && !route.includes('.test.'))
-      }).filter((el) => {
-        console.log(el)
-        console.log('is outside our scope: ', !(el.route.includes('/modules/') || el.route.includes('/server/')))
-        console.log('is a test file: ', el.route.includes('.test.'))
-
-        return el.route.includes('/modules/')
-      })
+      }).filter((el) => (el.route.includes('/modules/') || el.route.includes('/server/')) && !el.route.includes('.test.'))
   }
 }
 
