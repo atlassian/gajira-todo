@@ -140,8 +140,7 @@ module.exports = class {
 
     return matches
       .map(_.trim)
-      .filter(Boolean)
-      .map((match) => {
+      .filter((match) => {
         const end = prDiff.indexOf(match)
 
         const routeMatches = prDiff.slice(0, end).match(routeRegex)
