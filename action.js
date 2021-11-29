@@ -148,7 +148,12 @@ module.exports = class {
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
 
         return { content: match, route: lastRouteMatch }
-      }).filter(({ content, route }) => (route.includes('/modules/') || route.includes('/server/')) && !route.includes('.test.'))
+      // }).filter(({ content, route }) => (route.includes('/modules/') || route.includes('/server/')) && !route.includes('.test.'))
+      }).filter((el) => {
+        console.log(el)
+
+        return el.route.includes('/modules/')
+      })
   }
 }
 
