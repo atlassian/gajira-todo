@@ -38,6 +38,7 @@ module.exports = class {
 
     if (Number(githubEvent.pull_request.commits) > 0) {
       tasks = await this.findEslintInPr(githubEvent.repository, githubEvent.pull_request.number)
+      console.log('tasks:', tasks)
     }
 
     if (tasks.length === 0) {
@@ -114,7 +115,7 @@ module.exports = class {
         fields: {},
       })
 
-      console.log('Constructed fields: ', payload)
+      // console.log('Constructed fields: ', payload)
 
       // return (await this.Jira.createIssue(payload)).key
     })
@@ -134,6 +135,8 @@ module.exports = class {
     const rx = /^\+.*(?:\/\/|\/\*)\s+eslint-disable(.*)$/gm
     const routeRegex = /^\+\+\+.b\/.*$/gm
 
+    console.log('diff:', prDiff)
+
     const matches = getMatches(prDiff, rx, 1)
 
     if (!matches || !matches.length) return []
@@ -151,6 +154,8 @@ module.exports = class {
       // }).filter(({ content, route }) => (route.includes('/modules/') || route.includes('/server/')) && !route.includes('.test.'))
       }).filter((el) => {
         console.log(el)
+        console.log('is outside our scope: ', !(el.route.includes('/modules/') || el.route.includes('/server/')))
+        console.log('is a test file: ', el.route.includes('.test.'))
 
         return el.route.includes('/modules/')
       })
