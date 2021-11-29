@@ -146,6 +146,7 @@ module.exports = class {
 
         const routeMatches = prDiff.slice(0, end).match(routeRegex)
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
+        console.log(match, lastRouteMatch)
 
         if ((lastRouteMatch.includes('/modules/') || lastRouteMatch.includes('/server/')) && !lastRouteMatch.includes('.test.')) {
           return { content: match, route: lastRouteMatch.slice(5) }
