@@ -137,7 +137,8 @@ module.exports = class {
 
     console.log('diff:', prDiff)
 
-    const matches = getMatches(prDiff, rx, 1)
+    // const matches = getMatches(prDiff, rx, 1)
+    const matches = prDiff.match(rx)
 
     if (!matches || !matches.length) return []
     console.log(matches)
@@ -148,14 +149,10 @@ module.exports = class {
       .map((match) => {
         const end = prDiff.indexOf(match)
 
-        console.log('match: ', match)
-        console.log('end: ', end)
-
         const routeMatches = prDiff.slice(0, end).match(routeRegex)
-        console.log('routeMatches:', routeMatches)
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
 
-        return { content: match, route: lastRouteMatch }
+        return { content: match.slice(match.indexOf('eslint-disable')), route: lastRouteMatch }
       // }).filter(({ content, route }) => (route.includes('/modules/') || route.includes('/server/')) && !route.includes('.test.'))
       }).filter((el) => {
         console.log(el)
