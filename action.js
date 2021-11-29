@@ -137,6 +137,7 @@ module.exports = class {
     const matches = getMatches(prDiff, rx, 1)
 
     if (!matches || !matches.length) return []
+    console.log(matches)
 
     return matches
       .map(_.trim)
