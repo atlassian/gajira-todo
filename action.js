@@ -38,7 +38,6 @@ module.exports = class {
 
     if (Number(githubEvent.pull_request.commits) > 0) {
       tasks = await this.findEslintInPr(githubEvent.repository, githubEvent.pull_request.number)
-      console.log('tasks:', tasks)
     }
 
     if (tasks.length === 0) {
@@ -115,9 +114,9 @@ module.exports = class {
         fields: {},
       })
 
-      // console.log('Constructed fields: ', payload)
+      console.log('Constructed fields: ', payload)
 
-      // return (await this.Jira.createIssue(payload)).key
+      return (await this.Jira.createIssue(payload)).key
     })
 
     return { issues: await Promise.all(issues) }
@@ -135,13 +134,9 @@ module.exports = class {
     const rx = /^\+.*(?:\/\/|\/\*)\s+eslint-disable(.*)$/gm
     const routeRegex = /^\+\+\+.b\/.*$/gm
 
-    console.log('diff:', prDiff)
-
-    // const matches = getMatches(prDiff, rx, 1)
     const matches = prDiff.match(rx)
 
     if (!matches || !matches.length) return []
-    console.log(matches)
 
     return matches
       .map(_.trim)
@@ -153,19 +148,6 @@ module.exports = class {
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
 
         return { content: match.slice(match.indexOf('eslint-disable')), route: lastRouteMatch }
-      // }).filter(({ content, route }) => (route.includes('/modules/') || route.includes('/server/')) && !route.includes('.test.'))
       }).filter((el) => (el.route.includes('/modules/') || el.route.includes('/server/')) && !el.route.includes('.test.'))
   }
-}
-
-function getMatches (string, regex, index) {
-  index || (index = 1)
-  const matches = []
-  let match
-
-  while (match = regex.exec(string)) {
-    matches.push(match[index])
-  }
-
-  return matches
 }
