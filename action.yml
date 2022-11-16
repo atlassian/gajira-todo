@@ -17,5 +17,5 @@ outputs:
   issues:
     description: Well-formed JSON array containing keys of all newly created issues
 runs:
-  using: 'node12'
+  using: 'node16'
   main: './dist/index.js'
