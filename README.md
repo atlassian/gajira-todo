@@ -1,7 +1,6 @@
 # Jira TODO
 Create issue for TODO comments
 
-For examples on how to use this, check out the [gajira-demo](https://github.com/atlassian/gajira-demo) repository
 > ##### Only supports Jira Cloud. Does not support Jira Server (hosted)
 
 ## Usage

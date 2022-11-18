@@ -1,5 +1,4 @@
-on:
-  push
+on: push
 
 name: My Workflow
 
@@ -21,7 +20,7 @@ jobs:
     - name: Create TODO
       uses: ./
       with:
-        project: MC
+        project: TODO
         issuetype: Task
         description: Created automatically via GitHub Actions
       env:

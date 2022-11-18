@@ -118,7 +118,7 @@ module.exports = class {
         .filter(Boolean)
         .map(s => ({
           commitUrl: c.url,
-          summary: s,
+          summary: s.slice(0, 255),
         }))
     }))
   }
