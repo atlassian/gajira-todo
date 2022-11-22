@@ -21,7 +21,7 @@ Single-line comments in these formats:
 Example workflow:
 ```yaml
 - name: Create TODO
-  uses: ./
+  uses: atlassian/gajira-todo@v3
   with:
     project: MC
     issuetype: Task

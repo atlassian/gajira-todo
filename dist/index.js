@@ -124,7 +124,7 @@ module.exports = class {
         .filter(Boolean)
         .map(s => ({
           commitUrl: c.url,
-          summary: s,
+          summary: s.slice(0, 255),
         }))
     }))
   }
@@ -288,7 +288,7 @@ class Jira {
 
   async transitionIssue (issueId, data) {
     return this.fetch('transitionIssue', {
-      pathname: `/rest/api/3/issue/${issueId}/transitions`,
+      pathname: `/rest/api/2/issue/${issueId}/transitions`,
     }, {
       method: 'POST',
       body: data,
