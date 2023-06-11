@@ -22,6 +22,9 @@ inputs:
   taskId:
     description: "Original Jira task ID"
     required: true
+  labels:
+    description: "Labels for task"
+    required: false
 outputs:
   issues:
     description: Well-formed JSON array containing keys of all newly created issues
