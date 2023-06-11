@@ -91,7 +91,7 @@ module.exports = class {
         value: { value: jiraIssue ? jiraIssue.fields.customfield_12601.value : 'Gusa Growth' },
       }, {
         key: 'labels',
-        value: labels.length ? labels : ['ESlint'],
+        value: labels ? labels : ['ESlint'],
       }, {
         key: 'description',
         value: `Can be found in the following file: ${route.slice(5)}
