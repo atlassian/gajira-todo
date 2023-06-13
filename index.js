@@ -43,7 +43,8 @@ function parseArgs () {
   return {
     project: core.getInput('project'),
     issuetype: core.getInput('issuetype'),
-    description: core.getInput('description')
+    description: core.getInput('description'),
+    label: core.getInput('label'),
   }
 }
 
