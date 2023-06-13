@@ -22,8 +22,8 @@ inputs:
   taskId:
     description: "Original Jira task ID"
     required: true
-  labels:
-    description: "Labels for task"
+  label:
+    description: "Label for task"
     required: false
 outputs:
   issues:
