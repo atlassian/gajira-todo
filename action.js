@@ -105,7 +105,7 @@ module.exports = class {
 
       if (projectKey === 'UVP') {
         providedFields.push({
-          key: 'ccustomfield_14620', // UVP team field
+          key: 'customfield_14620', // UVP team field
           value: 'UVP/UHC FE',
         });
         providedFields.push({
