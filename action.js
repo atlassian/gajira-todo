@@ -24,7 +24,7 @@ module.exports = class {
     const { argv, githubEvent, config } = this
     const projectKey = argv.project
     const issuetypeName = argv.issuetype
-    const labels = argv.labels
+    const label = argv.label
     let tasks = []
 
     if (githubEvent.pull_request.title.indexOf('automerge_release') !== -1) {
@@ -91,7 +91,7 @@ module.exports = class {
         value: { value: jiraIssue ? jiraIssue.fields.customfield_12601.value : 'Gusa Growth' },
       }, {
         key: 'labels',
-        value: labels ? labels : ['ESlint'],
+        value: label ? [label] : ['ESlint'],
       }, {
         key: 'description',
         value: `Can be found in the following file: ${route.slice(5)}
