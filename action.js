@@ -149,6 +149,6 @@ module.exports = class {
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
 
         return { content: match.slice(match.indexOf('eslint-disable')), route: lastRouteMatch }
-      }).filter((el) => (el.route.includes('/modules/') || el.route.includes('/server/')) && !el.route.includes('.test.') && !el.route.includes('__specs__') && !el.route.includes('__analytics__') && !el.route.includes('__new_specs__'))
+      }).filter((el) => (el.route.includes('/src/') || el.route.includes('/modules/') || el.route.includes('/server/')) && !el.route.includes('.test.') && !el.route.includes('__specs__') && !el.route.includes('__analytics__') && !el.route.includes('__new_specs__'))
   }
 }
