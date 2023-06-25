@@ -104,14 +104,13 @@ module.exports = class {
       ]
 
       if (projectKey === 'UVP') {
-        providedFields.push({
+        providedFields = [...providedFields, {
           key: 'customfield_14620', // UVP team field
-          value: 'UVP/UHC FE',
-        });
-        providedFields.push({
+          value: { value: 'UVP/UHC FE' },
+        }, {
           key: 'customfield_14621', // UVP team field
-          value: 'UVP',
-        });
+          value: { value: 'UVP' },
+        }]
       }
 
       if (argv.fields) {
