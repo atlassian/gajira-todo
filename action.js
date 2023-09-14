@@ -90,6 +90,9 @@ module.exports = class {
         key: 'customfield_12601', //  team field
         value: { value: jiraIssue ? jiraIssue.fields.customfield_12601.value : 'Gusa Growth' },
       }, {
+        key: "customfield_14613", //  manual QA required field
+        value: { value: 'NO' },
+      }, {
         key: 'labels',
         value: label ? [label] : ['ESlint'],
       }, {
