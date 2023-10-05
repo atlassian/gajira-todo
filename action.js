@@ -1,3 +1,4 @@
+import { Octokit } from '@octokit/action'
 const _ = require('lodash')
 const GitHub = require('./common/net/GitHub')
 const Jira = require('./common/net/Jira')
@@ -9,7 +10,6 @@ module.exports = class {
       token: config.token,
       email: config.email,
     })
-    console.log(githubToken)
 
     this.GitHub = new GitHub({
       token: githubToken,
@@ -161,6 +161,18 @@ module.exports = class {
   }
 
   async findEslintInPr(repo, prId) {
+    const octokit = new Octokit({
+      auth: process.env.GITHUB_TOKEN,
+    })
+
+    const response = await octokit.request(`GET /repos/${repo.full_name}/pulls/${prId}`, {
+      headers: {
+        Accept: 'application/vnd.github.diff',
+      },
+    })
+
+    console.log(response)
+
     const prDiff = await this.GitHub.getPRDiff(repo.full_name, prId)
     const rx = /^\+.*(?:\/\/|\/\*)\s+eslint-disable(.*)$/gm
     const routeRegex = /^\+\+\+.b\/.*$/gm
