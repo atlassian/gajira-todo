@@ -1,9 +1,10 @@
+import { Octokit } from '@octokit/action'
 const _ = require('lodash')
-const Jira = require('./common/net/Jira')
 const GitHub = require('./common/net/GitHub')
+const Jira = require('./common/net/Jira')
 
 module.exports = class {
-  constructor ({ githubEvent, argv, config, githubToken }) {
+  constructor({ githubEvent, argv, config, githubToken }) {
     this.Jira = new Jira({
       baseUrl: config.baseUrl,
       token: config.token,
@@ -14,13 +15,17 @@ module.exports = class {
       token: githubToken,
     })
 
+    this.Octokit = new Octokit({
+      auth: process.env.GITHUB_TOKEN,
+    })
+
     this.config = config
     this.argv = argv
     this.githubEvent = githubEvent
     this.githubToken = githubToken
   }
 
-  async execute () {
+  async execute() {
     const { argv, githubEvent, config } = this
     const projectKey = argv.project
     const issuetypeName = argv.issuetype
@@ -69,64 +74,80 @@ module.exports = class {
     }
 
     const issues = tasks.map(async ({ content, route }) => {
-      let providedFields = [{
-        key: 'project',
-        value: {
-          key: projectKey,
+      let providedFields = [
+        {
+          key: 'project',
+          value: {
+            key: projectKey,
+          },
         },
-      }, {
-        key: 'issuetype',
-        value: {
-          name: issuetypeName,
+        {
+          key: 'issuetype',
+          value: {
+            name: issuetypeName,
+          },
         },
-      }, {
-        key: 'summary',
-        value: `${platform} - Refactor in order to remove eslint disable: ${content}`,
-      },
-      {
-        key: 'assignee',
-        value: { accountId: jiraIssue ? jiraIssue.fields.assignee.accountId : '5faa5f3a8405b10077a8fd7e' }, // if there's no jira task then assign to Mikhail Nikolaevskiy in Growth team (change to somebody else onc he's gone)
-      }, {
-        key: 'customfield_12601', //  team field
-        value: { value: jiraIssue ? jiraIssue.fields.customfield_12601.value : 'Gusa Growth' },
-      }, {
-        key: "customfield_14613", //  manual QA required field
-        value: { value: 'NO' },
-      }, {
-        key: 'labels',
-        value: label ? [label] : ['ESlint'],
-      }, {
-        key: 'description',
-        value: `Can be found in the following file: ${route.slice(5)}
+        {
+          key: 'summary',
+          value: `${platform} - Refactor in order to remove eslint disable: ${content}`,
+        },
+        {
+          key: 'assignee',
+          value: {
+            accountId: jiraIssue ? jiraIssue.fields.assignee.accountId : '5faa5f3a8405b10077a8fd7e',
+          }, // if there's no jira task then assign to Mikhail Nikolaevskiy in Growth team (change to somebody else onc he's gone)
+        },
+        {
+          key: 'customfield_12601', //  team field
+          value: { value: jiraIssue ? jiraIssue.fields.customfield_12601.value : 'Gusa Growth' },
+        },
+        {
+          key: 'customfield_14613', //  manual QA required field
+          value: { value: 'NO' },
+        },
+        {
+          key: 'labels',
+          value: label ? [label] : ['ESlint'],
+        },
+        {
+          key: 'description',
+          value: `Can be found in the following file: ${route.slice(5)}
         
         
         
         Action was triggered by this PR: ${githubEvent.pull_request.html_url}
         `,
-      },
+        },
       ]
 
       if (projectKey === 'UVP') {
-        providedFields = [...providedFields, {
-          key: 'customfield_14620', // UVP team field
-          value: { value: 'UVP/UHC FE' },
-        }, {
-          key: 'customfield_14621', // UVP team field
-          value: { value: 'UVP' },
-        }]
+        providedFields = [
+          ...providedFields,
+          {
+            key: 'customfield_14620', // UVP team field
+            value: { value: 'UVP/UHC FE' },
+          },
+          {
+            key: 'customfield_14621', // UVP team field
+            value: { value: 'UVP' },
+          },
+        ]
       }
 
       if (argv.fields) {
         providedFields = [...providedFields, ...this.transformFields(argv.fields)]
       }
 
-      const payload = providedFields.reduce((acc, field) => {
-        acc.fields[field.key] = field.value
+      const payload = providedFields.reduce(
+        (acc, field) => {
+          acc.fields[field.key] = field.value
 
-        return acc
-      }, {
-        fields: {},
-      })
+          return acc
+        },
+        {
+          fields: {},
+        },
+      )
 
       console.log('Constructed fields: ', payload)
 
@@ -136,14 +157,22 @@ module.exports = class {
     return { issues: await Promise.all(issues) }
   }
 
-  transformFields (fields) {
+  transformFields(fields) {
     return Object.keys(fields).map((fieldKey) => ({
       key: fieldKey,
       value: fields[fieldKey],
     }))
   }
 
-  async findEslintInPr (repo, prId) {
+  async findEslintInPr(repo, prId) {
+    const response = await this.Octokit.request(`GET /repos/${repo.full_name}/contents/${prId}`, {
+      headers: {
+        Accept: 'application/vnd.github.v3.diff',
+      },
+    })
+
+    console.log('octokit response', response)
+
     const prDiff = await this.GitHub.getPRDiff(repo.full_name, prId)
     const rx = /^\+.*(?:\/\/|\/\*)\s+eslint-disable(.*)$/gm
     const routeRegex = /^\+\+\+.b\/.*$/gm
@@ -162,6 +191,16 @@ module.exports = class {
         const lastRouteMatch = routeMatches[routeMatches.length - 1]
 
         return { content: match.slice(match.indexOf('eslint-disable')), route: lastRouteMatch }
-      }).filter((el) => (el.route.includes('/src/') || el.route.includes('/modules/') || el.route.includes('/server/')) && !el.route.includes('.test.') && !el.route.includes('__specs__') && !el.route.includes('__analytics__') && !el.route.includes('__new_specs__'))
+      })
+      .filter(
+        (el) =>
+          (el.route.includes('/src/') ||
+            el.route.includes('/modules/') ||
+            el.route.includes('/server/')) &&
+          !el.route.includes('.test.') &&
+          !el.route.includes('__specs__') &&
+          !el.route.includes('__analytics__') &&
+          !el.route.includes('__new_specs__'),
+      )
   }
 }
