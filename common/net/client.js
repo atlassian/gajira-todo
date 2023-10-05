@@ -4,9 +4,6 @@ module.exports =
   (serviceName) =>
   async (state, apiMethod = 'unknown') => {
     const response = await fetch(state.req.url, state.req)
-    console.log('state.req.url', state.req.url)
-    console.log('state.req', state.req)
-    console.log('response', response)
 
     state.res = {
       headers: response.headers.raw(),
