@@ -1,13 +1,10 @@
 const fs = require('fs')
 const core = require('@actions/core')
-const github = require('@actions/github')
 const YAML = require('yaml')
 
-const cliConfigPath = `${process.env.HOME}/.jira.d/config.yml`
 const configPath = `${process.env.HOME}/jira/config.yml`
 const Action = require('./action')
 const githubToken = process.env.GITHUB_TOKEN
-const octokit = github.getOctokit(githubToken)
 
 // eslint-disable-next-line import/no-dynamic-require
 const githubEvent = require(process.env.GITHUB_EVENT_PATH)
