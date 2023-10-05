@@ -24,12 +24,13 @@ class GitHub {
   }
 
   async getPRDiff(repo, prId) {
+    console.log(repo, prId)
     return this.fetch(
       'getCommitDiff',
-      { pathname: `/repos/optimaxdev/${repo}/pulls/${prId}` },
+      { pathname: `/repos/${repo}/pulls/${prId}` },
       {
         headers: {
-          Accept: 'application/vnd.github.v3.diff',
+          Accept: 'application/vnd.github.diff',
         },
       },
     )
