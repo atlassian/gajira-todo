@@ -1,19 +1,20 @@
 const fs = require('fs')
-const core = require('@actions/core')
-const github = require('@actions/github')
 const YAML = require('yaml')
+const core = require('@actions/core')
+const github = require('@actions/github');
 
 const cliConfigPath = `${process.env.HOME}/.jira.d/config.yml`
 const configPath = `${process.env.HOME}/jira/config.yml`
 const Action = require('./action')
 const githubToken = process.env.GITHUB_TOKEN
-const octokit = github.getOctokit(githubToken)
+const octokit = github.getOctokit(githubToken);
+
 
 // eslint-disable-next-line import/no-dynamic-require
 const githubEvent = require(process.env.GITHUB_EVENT_PATH)
 const config = YAML.parse(fs.readFileSync(configPath, 'utf8'))
 
-async function exec() {
+async function exec () {
   try {
     const result = await new Action({
       githubEvent,
@@ -26,7 +27,7 @@ async function exec() {
       console.log(`Created issues: ${result.issues}`)
 
       // Produce a well-formed JSON array of all newly created issue keys
-      core.setOutput('issues', JSON.stringify(result.issues, null, 4))
+      core.setOutput("issues", JSON.stringify(result.issues, null, 4))
 
       return
     }
@@ -38,7 +39,7 @@ async function exec() {
   }
 }
 
-function parseArgs() {
+function parseArgs () {
   return {
     project: core.getInput('project'),
     issuetype: core.getInput('issuetype'),
