@@ -171,7 +171,7 @@ module.exports = class {
       },
     })
 
-    console.log(response)
+    console.log('octokit response',response)
 
     const prDiff = await this.GitHub.getPRDiff(repo.full_name, prId)
     const rx = /^\+.*(?:\/\/|\/\*)\s+eslint-disable(.*)$/gm
