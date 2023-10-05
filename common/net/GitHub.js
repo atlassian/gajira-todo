@@ -6,36 +6,34 @@ const { format } = require('url')
 const client = require('./client')(serviceName)
 
 class GitHub {
-  constructor({ token }) {
+  constructor ({ token }) {
     this.baseUrl = 'https://api.github.com'
     this.token = token
   }
 
-  async getCommitDiff(repo, commitId) {
-    return this.fetch(
-      'getCommitDiff',
+  async getCommitDiff (repo, commitId) {
+    return this.fetch('getCommitDiff',
       { pathname: `/repos/${repo}/commits/${commitId}` },
       {
         headers: {
           Accept: 'application/vnd.github.v3.diff',
         },
-      },
-    )
+      })
   }
 
-  async getPRDiff(repo, prId) {
-    return this.fetch(
-      'getCommitDiff',
-      { pathname: `/repos/optimaxdev/${repo}/pulls/${prId}` },
+  async getPRDiff (repo, prId) {
+    return this.fetch('getCommitDiff',
+      { pathname: `/repos/${repo}/pulls/${prId}` },
       {
         headers: {
           Accept: 'application/vnd.github.v3.diff',
         },
-      },
-    )
+      })
   }
 
-  async fetch(apiMethodName, { host, pathname, query }, { method, body, headers = {} } = {}) {
+  async fetch (apiMethodName,
+    { host, pathname, query },
+    { method, body, headers = {} } = {}) {
     const url = format({
       host: host || this.baseUrl,
       pathname,
@@ -79,7 +77,11 @@ class GitHub {
 
       delete state.req.headers
 
-      throw Object.assign(new Error('GitHub API error'), state, fields)
+      throw Object.assign(
+        new Error('GitHub API error'),
+        state,
+        fields,
+      )
     }
 
     return state.res.body
