@@ -161,17 +161,17 @@ module.exports = class {
   }
 
   async findEslintInPr(repo, prId) {
-    // const octokit = new Octokit({
-    //   auth: process.env.GITHUB_TOKEN,
-    // })
-    //
-    // const response = await octokit.request(`GET /repos/${repo.full_name}/pulls/${prId}`, {
-    //   headers: {
-    //     Accept: 'application/vnd.github.diff',
-    //   },
-    // })
-    //
-    // console.log('octokit response', response)
+    const octokit = new Octokit({
+      auth: process.env.GITHUB_TOKEN,
+    })
+
+    const response = await octokit.request(`GET /repos/${repo.full_name}/pulls/${prId}`, {
+      headers: {
+        Accept: 'application/vnd.github.diff',
+      },
+    })
+
+    console.log('octokit response', response)
 
     const prDiff = await this.GitHub.getPRDiff(repo.full_name, prId)
     const rx = /^\+.*(?:\/\/|\/\*)\s+eslint-disable(.*)$/gm
