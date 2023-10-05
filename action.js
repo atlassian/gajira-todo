@@ -9,7 +9,6 @@ module.exports = class {
       token: config.token,
       email: config.email,
     })
-    console.log(githubToken)
 
     this.GitHub = new GitHub({
       token: githubToken,
