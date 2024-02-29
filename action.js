@@ -87,20 +87,16 @@ module.exports = class {
           value: `${platform} - Refactor in order to remove eslint disable: ${content}`,
         },
         {
-          key: 'developer',
+          key: 'customfield_14697',
           value: {
             accountId: jiraIssue
-                ? jiraIssue.fields.developer.accountId
-                : '5faa5f3a8405b10077a8fd7e',
+              ? jiraIssue.fields.customfield_14697.accountId
+              : '5faa5f3a8405b10077a8fd7e',
           }, // if there's no jira task then assign to Mikhail Nikolaevskiy in Growth team (change to somebody else onc he's gone)
         },
         {
           key: 'customfield_12601', //  team field
           value: { value: jiraIssue ? jiraIssue.fields.customfield_12601.value : 'Gusa Growth' },
-        },
-        {
-          key: 'customfield_14711', //  Developer type field
-          value: { value: 'Frontend' },
         },
         {
           key: 'customfield_14613', //  manual QA required field
