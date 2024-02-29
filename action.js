@@ -87,9 +87,11 @@ module.exports = class {
           value: `${platform} - Refactor in order to remove eslint disable: ${content}`,
         },
         {
-          key: 'assignee',
+          key: 'developer',
           value: {
-            accountId: jiraIssue ? jiraIssue.fields.assignee.accountId : '5faa5f3a8405b10077a8fd7e',
+            accountId: jiraIssue
+                ? jiraIssue.fields.developer.accountId
+                : '5faa5f3a8405b10077a8fd7e',
           }, // if there's no jira task then assign to Mikhail Nikolaevskiy in Growth team (change to somebody else onc he's gone)
         },
         {
